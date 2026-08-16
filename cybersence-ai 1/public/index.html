@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSense AI | Security Auditor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 p-8 font-sans">
+    <div class="max-w-3xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
+        <h1 class="text-3xl font-bold text-green-400 mb-2">CyberSense AI</h1>
+        <p class="text-gray-400 mb-6">Paste code, network configurations, or error logs below for an instant security audit.</p>
+        
+        <textarea id="inputData" rows="8" class="w-full p-4 bg-gray-900 border border-gray-600 rounded text-green-300 font-mono mb-4 focus:outline-none focus:border-green-500" placeholder="Paste logs or code here..."></textarea>
+        
+        <button onclick="runAudit()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded transition">
+            Run Security Audit
+        </button>
+
+        <div id="loading" class="hidden mt-6 text-center text-gray-400">Analyzing data for vulnerabilities...</div>
+        
+        <div id="resultsBox" class="hidden mt-6 bg-gray-900 p-4 rounded border border-gray-700">
+            <h2 class="text-xl font-semibold text-green-400 mb-2">Audit Results:</h2>
+            <div id="outputText" class="text-sm whitespace-pre-wrap font-mono"></div>
+        </div>
+    </div>
+
+    <script>
+        async function runAudit() {
+            const inputData = document.getElementById('inputData').value;
+            if (!inputData) return alert('Please paste some data to audit.');
+
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('resultsBox').classList.add('hidden');
+
+            try {
+                // Ensure this hits the backend properly whether on local host or AWS
+                const response = await fetch('/api/audit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ inputData })
+                });
+                
+                const data = await response.json();
+                document.getElementById('outputText').innerText = data.output || data.error;
+            } catch (err) {
+                document.getElementById('outputText').innerText = "Connection error.";
+            }
+
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('resultsBox').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
