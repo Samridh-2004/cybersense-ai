@@ -16,7 +16,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 app.post('/api/audit', async (req, res) => {
     try {
         const { inputData } = req.body;
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3.7-flash" });
         
         const prompt = `Act as an expert cybersecurity analyst. Analyze the following code, log, or network data:\n\n${inputData}\n\nProvide a concise security assessment, identify potential vulnerabilities, and suggest remediations. Format with clear headings.`;
         
